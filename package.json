@@ -1,0 +1,20 @@
+{
+  "name": "@lbd-sh/date-tz-mongoose",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "mongoose": "^8.16.0",
+    "typescript": "^5.7.2"
+  },
+  "dependencies": {
+    "@lbd-sh/date-tz": "^1.0.2"
+  }
+}

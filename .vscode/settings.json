@@ -1,0 +1,9 @@
+{
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "typescript.referencesCodeLens.enabled": true,
+  "typescript.format.semicolons": "insert",
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "always"
+  }
+}
