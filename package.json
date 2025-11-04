@@ -1,18 +1,62 @@
 {
   "name": "@lbd-sh/date-tz-mongoose",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "",
+  "keywords": [
+    "date",
+    "time",
+    "datetime",
+    "timezone",
+    "date-format",
+    "date-parser",
+    "timezones",
+    "utc",
+    "timestamp",
+    "date-manipulation",
+    "date-comparison",
+    "timezone-conversion",
+    "typescript",
+    "javascript",
+    "mongoose",
+    "mongodb",
+    "date-tz",
+    "date-tz-mongoose"
+  ],
   "main": "index.js",
   "types": "index.d.ts",
   "scripts": {
     "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
-  "author": "",
-  "license": "ISC",
+  "author": {
+    "email": "info@lbdsh.com",
+    "name": "LBD SRL",
+    "url": "https://github.com/lbdsh"
+  },
+  "maintainers": [
+    {
+      "email": "info@lbdsh.com",
+      "name": "LBD SRL",
+      "url": "https://github.com/lbdsh"
+    }
+  ],
+  "bugs": {
+    "url": "https://github.com/lbdsh/date-tz-mongoose/issues"
+  },
+  "homepage": "https://github.com/lbdsh/date-tz-mongoose#readme",
+  "readme": "https://github.com/lbdsh/date-tz-mongoose#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lbdsh/date-tz-mongoose.git"
+  },
+  "markdown": "github",
+  "license": "MIT",
   "devDependencies": {
+    "@types/node": "^24.10.0",
     "mongoose": "^8.16.0",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.9"
   },
   "dependencies": {
     "@lbd-sh/date-tz": "^1.0.2"
