@@ -32,6 +32,18 @@ describe('DateTzSchema.cast', () => {
     });
   });
 
+  it('returns DateTz instances when called during document init', () => {
+    const schema = createSchema();
+    const timestamp = 1_701_234_567_890;
+    const timezone = 'UTC';
+
+    const result = schema.cast({ timestamp, timezone }, undefined as any, true);
+
+    expect(result).toBeInstanceOf(DateTz);
+    expect((result as DateTz).timezone).toBe(timezone);
+    expect((result as DateTz).valueOf()).toBe(new DateTz(timestamp, timezone).valueOf());
+  });
+
   it('infers UTC when the timezone is omitted', () => {
     const schema = createSchema();
     const timestamp = 123_456;
