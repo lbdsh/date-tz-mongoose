@@ -35,23 +35,28 @@ jobs:
         id: version
         run: |
           set -euo pipefail
+          pkg_name=$(jq -r '.name' package.json)
           current_pkg=$(jq -r '.version' package.json)
-          latest=$(npm view @lbd-sh/date-tz version 2>/dev/null || echo "0.0.0")
+          latest=$(npm view "$pkg_name" version 2>/dev/null || echo "0.0.0")
+          echo "Package name: $pkg_name"
           echo "Package.json version: $current_pkg"
           echo "Latest published version: $latest"
-          base="$latest"
-          IFS=. read -r maj min pat <<< "$base"
-          pat=$((pat + 1))
-          next="$maj.$min.$pat"
-          if [ "$next" = "$current_pkg" ]; then
-            # If package.json already at that version, bump again
-            IFS=. read -r maj min pat <<< "$next"
-            pat=$((pat + 1))
-            next="$maj.$min.$pat"
+          needs_bump=false
+          next="$current_pkg"
+          if [ "$latest" != "0.0.0" ]; then
+            newest=$(printf '%s\n' "$latest" "$current_pkg" | sort -V | tail -n1)
+            if [ "$newest" = "$latest" ]; then
+              IFS=. read -r maj min pat <<< "$latest"
+              pat=$((pat + 1))
+              next="$maj.$min.$pat"
+              needs_bump=true
+            fi
           fi
           echo "Next version: $next"
+          echo "needs_bump=$needs_bump" >> "$GITHUB_OUTPUT"
           echo "publish_version=$next" >> "$GITHUB_OUTPUT"
       - name: Bump version in package.json
+        if: steps.version.outputs.needs_bump == 'true'
         run: npm version ${{ steps.version.outputs.publish_version }} --git-tag-version false
       - name: Commit version bump
         uses: stefanzweifel/git-auto-commit-action@v5
