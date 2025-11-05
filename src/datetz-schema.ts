@@ -43,17 +43,13 @@ export class DateTzSchema extends SchemaType {
     this.get((value: unknown) => toDateTz(value) ?? value);
   }
 
-  cast(
-    data: any,
-    _doc?: mongoose.Document,
-    init?: boolean
-  ): SerializableDateTz | DateTz | undefined {
+  cast(data: any): SerializableDateTz | undefined {
     const normalized = toDateTz(data);
     if (!normalized) {
       return undefined;
     }
 
-    return init ? normalized : toSerializable(normalized);
+    return toSerializable(normalized);
   }
 }
 
