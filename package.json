@@ -20,7 +20,8 @@
     "mongoose",
     "mongodb",
     "date-tz",
-    "date-tz-mongoose"
+    "date-tz-mongoose",
+    "lbd-sh"
   ],
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
