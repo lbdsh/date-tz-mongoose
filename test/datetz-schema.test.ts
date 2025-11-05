@@ -86,16 +86,16 @@ describe('Mongoose integration', () => {
     expect(doc.startsAt.timezone).toBe(timezone);
     expect(doc.startsAt.valueOf()).toBe(expected.valueOf());
 
-    expect(doc.toObject().startsAt).toEqual({
-      timestamp: expected.valueOf(),
-      timezone: expected.timezone,
-    });
+    const plain = doc.toObject();
+    expect(plain.startsAt).toBeInstanceOf(DateTz);
+    expect(plain.startsAt.valueOf()).toBe(expected.valueOf());
+    expect(plain.startsAt.timezone).toBe(expected.timezone);
 
     const hydrated = Model.hydrate({ _id: doc._id, startsAt: { timestamp, timezone } });
     expect(hydrated.startsAt).toBeInstanceOf(DateTz);
-    expect(hydrated.toObject().startsAt).toEqual({
-      timestamp: expected.valueOf(),
-      timezone: expected.timezone,
-    });
+    const hydratedPlain = hydrated.toObject();
+    expect(hydratedPlain.startsAt).toBeInstanceOf(DateTz);
+    expect(hydratedPlain.startsAt.valueOf()).toBe(expected.valueOf());
+    expect(hydratedPlain.startsAt.timezone).toBe(expected.timezone);
   });
 });

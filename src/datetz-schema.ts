@@ -42,12 +42,19 @@ const toSerializable = (value: unknown): SerializableDateTz | undefined => {
   };
 };
 
+const cloneDateTz = (value: DateTz): DateTz =>
+  new DateTz(value.valueOf(), value.timezone || DEFAULT_TIMEZONE);
+
 export class DateTzSchema extends SchemaType {
   constructor(key: string, options: any) {
     super(key, options, 'DateTzSchema');
 
     this.get((value: unknown) => coerceToDateTz(value) ?? value);
     this.set((value: unknown) => toSerializable(value));
+    this.transform((value: unknown) => {
+      const dateTz = coerceToDateTz(value);
+      return dateTz ? cloneDateTz(dateTz) : value;
+    });
   }
 
   cast(value: unknown): SerializableDateTz | undefined {
