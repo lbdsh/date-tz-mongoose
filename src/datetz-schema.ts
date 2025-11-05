@@ -54,7 +54,7 @@ export class DateTzSchema extends SchemaType {
     this.set((value: unknown) => toSerializable(value));
   }
 
-  cast(value: unknown): IDateTz | undefined {
+  cast(value: unknown): SerializableDateTz | undefined {
     return toSerializable(value);
   }
 }
