@@ -7,7 +7,7 @@ export class DateTzSchema extends SchemaType {
     super(key, options, 'DateTzSchema');
   }
 
-  cast(data: any): IDateTz | undefined {
+  cast(data: any): IDateTz {
     if (data instanceof DateTz) {
       return data;
     }
