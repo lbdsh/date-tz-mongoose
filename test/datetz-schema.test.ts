@@ -57,6 +57,25 @@ describe('DateTzSchema persistence', () => {
       timezone,
     });
   });
+
+  it('returns DateTz instances when reading documents back from MongoDB', async () => {
+    const Model = getModel();
+    const expected = new DateTz(Date.now(), 'Europe/Rome');
+
+    const saved = await Model.create({ scenario: 'hydrate after save', startsAt: { timestamp: expected.valueOf(), timezone: expected.timezone } });
+    const found = await Model.findById(saved._id);
+
+    expect(found).not.toBeNull();
+    expect(found?.startsAt).toBeInstanceOf(DateTz);
+    expect((found?.startsAt as DateTz).valueOf()).toBe(expected.valueOf());
+    expect((found?.startsAt as DateTz).timezone).toBe(expected.timezone);
+
+    const leanDoc = await Model.findById(saved._id).lean();
+    expect(leanDoc?.startsAt).toEqual({
+      timestamp: expected.valueOf(),
+      timezone: expected.timezone,
+    });
+  });
 });
 
 describe('Mongoose integration', () => {
@@ -67,10 +86,9 @@ describe('Mongoose integration', () => {
     const casted = schemaType.cast({ timestamp: 1_701_234_567_890, timezone: 'Europe/Rome' });
     const expected = new DateTz(1_701_234_567_890, 'Europe/Rome');
 
-    expect(casted).toEqual({
-      timestamp: expected.valueOf(),
-      timezone: expected.timezone,
-    });
+    expect(casted).toBeInstanceOf(DateTz);
+    expect((casted as DateTz).valueOf()).toBe(expected.valueOf());
+    expect((casted as DateTz).timezone).toBe(expected.timezone);
   });
 
   it('hydrates document values as DateTz while persisting plain objects', async () => {
@@ -83,10 +101,9 @@ describe('Mongoose integration', () => {
     const doc = new Model({ startsAt: { timestamp, timezone } });
     const expected = new DateTz(timestamp, timezone);
 
-    expect(doc.startsAt).toEqual({
-      timestamp: expected.valueOf(),
-      timezone: expected.timezone,
-    });
+    expect(doc.startsAt).toBeInstanceOf(DateTz);
+    expect((doc.startsAt as DateTz).valueOf()).toBe(expected.valueOf());
+    expect((doc.startsAt as DateTz).timezone).toBe(expected.timezone);
 
     // toObject senza opzioni getters: true restituisce la forma persistibile plain
     const plain = doc.toObject();
@@ -96,16 +113,14 @@ describe('Mongoose integration', () => {
     });
 
     const persisted = await Model.hydrate({ _id: new mongoose.Types.ObjectId(), startsAt: { timestamp, timezone } });
-    expect(persisted.startsAt).toEqual({
-      timestamp: expected.valueOf(),
-      timezone: expected.timezone,
-    });
+    expect(persisted.startsAt).toBeInstanceOf(DateTz);
+    expect((persisted.startsAt as DateTz).valueOf()).toBe(expected.valueOf());
+    expect((persisted.startsAt as DateTz).timezone).toBe(expected.timezone);
 
     const hydrated = Model.hydrate({ _id: doc._id, startsAt: { timestamp, timezone } });
-    expect(hydrated.startsAt).toEqual({
-      timestamp: expected.valueOf(),
-      timezone: expected.timezone,
-    });
+    expect(hydrated.startsAt).toBeInstanceOf(DateTz);
+    expect((hydrated.startsAt as DateTz).valueOf()).toBe(expected.valueOf());
+    expect((hydrated.startsAt as DateTz).timezone).toBe(expected.timezone);
     const hydratedPlain = hydrated.toObject();
     expect(hydratedPlain.startsAt).toEqual({
       timestamp: expected.valueOf(),
