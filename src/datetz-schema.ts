@@ -8,9 +8,20 @@ type SerializableDateTz = { timestamp: number; timezone: string };
 const isTimestamp = (value: unknown): value is number =>
   typeof value === 'number' && Number.isFinite(value);
 
+const isDateInstance = (value: unknown): value is Date =>
+  value instanceof Date && !Number.isNaN(value.valueOf());
+
 const coerceToDateTz = (value: unknown): DateTz | undefined => {
   if (value instanceof DateTz) {
     return value;
+  }
+
+  if (isDateInstance(value)) {
+    return new DateTz(value.valueOf(), DEFAULT_TIMEZONE);
+  }
+
+  if (isTimestamp(value)) {
+    return new DateTz(value, DEFAULT_TIMEZONE);
   }
 
   if (value && typeof value === 'object') {
