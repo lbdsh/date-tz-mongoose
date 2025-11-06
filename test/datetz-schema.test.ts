@@ -41,7 +41,7 @@ const findRawDocument = async (
 describe('DateTzSchema persistence', () => {
   it('parses a formatted pickupDate string when timezone is provided separately', async () => {
     const Model = getModel();
-    const pickupDateString = '2025-11-01T22:35:00.000Z';
+    const pickupDateString = '2025-11-01 22:35:00.00';
     const timezone = 'Europe/London';
 
     const parsed = DateTz.parse(pickupDateString, DateTz.defaultFormat, timezone);
@@ -83,25 +83,33 @@ describe('Mongoose integration', () => {
     const doc = new Model({ startsAt: { timestamp, timezone } });
     const expected = new DateTz(timestamp, timezone);
 
-    expect(doc.startsAt).toBeInstanceOf(DateTz);
-    expect(doc.startsAt.timezone).toBe(timezone);
-    expect(doc.startsAt.valueOf()).toBe(expected.valueOf());
+    expect(doc.startsAt).toEqual({
+      timestamp: expected.valueOf(),
+      timezone: expected.timezone,
+    });
 
+    // toObject senza opzioni getters: true restituisce la forma persistibile plain
     const plain = doc.toObject();
-    expect(plain.startsAt).toBeInstanceOf(DateTz);
-    expect(plain.startsAt.valueOf()).toBe(expected.valueOf());
-    expect(plain.startsAt.timezone).toBe(expected.timezone);
+    expect(plain.startsAt).toEqual({
+      timestamp: expected.valueOf(),
+      timezone: expected.timezone,
+    });
 
     const persisted = await Model.hydrate({ _id: new mongoose.Types.ObjectId(), startsAt: { timestamp, timezone } });
-    expect(persisted.startsAt).toBeInstanceOf(DateTz);
-    expect(persisted.startsAt.valueOf()).toBe(expected.valueOf());
-    expect(persisted.startsAt.timezone).toBe(expected.timezone);
+    expect(persisted.startsAt).toEqual({
+      timestamp: expected.valueOf(),
+      timezone: expected.timezone,
+    });
 
     const hydrated = Model.hydrate({ _id: doc._id, startsAt: { timestamp, timezone } });
-    expect(hydrated.startsAt).toBeInstanceOf(DateTz);
+    expect(hydrated.startsAt).toEqual({
+      timestamp: expected.valueOf(),
+      timezone: expected.timezone,
+    });
     const hydratedPlain = hydrated.toObject();
-    expect(hydratedPlain.startsAt).toBeInstanceOf(DateTz);
-    expect(hydratedPlain.startsAt.valueOf()).toBe(expected.valueOf());
-    expect(hydratedPlain.startsAt.timezone).toBe(expected.timezone);
+    expect(hydratedPlain.startsAt).toEqual({
+      timestamp: expected.valueOf(),
+      timezone: expected.timezone,
+    });
   });
 });

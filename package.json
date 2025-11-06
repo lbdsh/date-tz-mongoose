@@ -64,6 +64,6 @@
     "vitest": "^2.1.9"
   },
   "dependencies": {
-    "@lbd-sh/date-tz": "^1.0.18"
+    "@lbd-sh/date-tz": "^1.0.19"
   }
 }
